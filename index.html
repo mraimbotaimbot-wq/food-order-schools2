@@ -10,28 +10,28 @@
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:url('taphanhin-school.png') no-repeat center center fixed;
-  background-size:cover;
+  background:#f2f2f2;
 }
 .container{
   max-width:420px;
   width:92%;
   margin:40px auto;
-  background:#ffffffee;
+  background:#fff;
   padding:16px;
   border-radius:12px;
   box-shadow:0 4px 16px rgba(0,0,0,.2);
 }
-h1,h2,h3{text-align:center;margin:8px 0}
+h2,h3{text-align:center;margin:10px 0}
 button{
   width:100%;
   padding:12px;
-  margin:6px 0;
+  margin:8px 0;
   border:none;
   border-radius:8px;
   background:#2b7cff;
   color:#fff;
   font-size:16px;
+  cursor:pointer;
 }
 input,select{
   width:100%;
@@ -41,177 +41,80 @@ input,select{
   border:1px solid #ccc;
 }
 .hidden{display:none}
-#menuList{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
 .menu{
   border:1px solid #ddd;
   border-radius:8px;
   padding:6px;
+  margin-bottom:10px;
   text-align:center;
-}
-.menu img{
-  width:100%;
-  height:90px;
-  object-fit:cover;
-  border-radius:6px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- หน้าแรก -->
 <div class="container" id="home">
-<h2>สั่งอาหารโรงเรียนตะพานหิน</h2>
-<button onclick="show('login')">เข้าสู่ระบบ</button>
-<button onclick="show('register')">สมัครสมาชิก</button>
+  <h2>สั่งอาหารโรงเรียนตะพานหิน</h2>
+  <button onclick="showPage('login')">เข้าสู่ระบบ</button>
+  <button onclick="showPage('register')">สมัครสมาชิก</button>
 </div>
 
+<!-- เข้าสู่ระบบ -->
 <div class="container hidden" id="login">
-<h3>เข้าสู่ระบบ</h3>
-<select id="loginRole">
-<option value="student">นักเรียน</option>
-<option value="seller">คนขาย</option>
-</select>
-<input id="loginUser" placeholder="ชื่อผู้ใช้">
-<input id="loginPass" type="password" placeholder="รหัสผ่าน 6 หลัก">
-<button onclick="login()">เข้าสู่ระบบ</button>
-<button onclick="show('home')">กลับ</button>
+  <h3>เข้าสู่ระบบ</h3>
+  <select id="loginRole">
+    <option value="student">นักเรียน</option>
+    <option value="seller">คนขาย</option>
+  </select>
+  <input id="loginUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)">
+  <input id="loginPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)">
+  <button onclick="login()">เข้าสู่ระบบ</button>
+  <button onclick="showPage('home')">กลับ</button>
 </div>
 
+<!-- สมัครสมาชิก -->
 <div class="container hidden" id="register">
-<h3>สมัครสมาชิก</h3>
-<select id="regRole">
-<option value="student">นักเรียน</option>
-<option value="seller">คนขาย</option>
-</select>
-<input id="regUser" placeholder="ชื่อผู้ใช้">
-<input id="regPass" type="password" placeholder="รหัสผ่าน 6 หลัก">
-<button onclick="register()">สมัคร</button>
-<button onclick="show('home')">กลับ</button>
+  <h3>สมัครสมาชิก</h3>
+  <select id="regRole">
+    <option value="student">นักเรียน</option>
+    <option value="seller">คนขาย</option>
+  </select>
+  <input id="regUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)">
+  <input id="regPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)">
+  <button onclick="register()">สมัคร</button>
+  <button onclick="showPage('home')">กลับ</button>
 </div>
 
+<!-- ร้านอาหาร -->
 <div class="container hidden" id="shop">
-<h3 id="shopTitle">ร้านอาหาร</h3>
-<p id="studentMsg" style="text-align:center;color:#666">ยังไม่มีเมนูอาหาร</p>
-<div id="menuList"></div>
+  <h3 id="shopTitle">ร้านอาหาร</h3>
+  <p id="studentMsg" style="text-align:center;color:#666">
+    ยังไม่มีเมนูอาหาร
+  </p>
 
-<div id="sellerPanel" class="hidden">
-<hr>
-<h4>สำหรับคนขาย</h4>
-<input id="shopName" placeholder="ชื่อร้าน">
-<button onclick="createShop()">สร้างร้าน</button>
-<hr>
-<input type="file" id="foodImg" accept="image/*">
-<input id="foodName" placeholder="ชื่ออาหาร">
-<input id="foodPrice" type="number" placeholder="ราคา">
-<button onclick="addMenu()">เพิ่มเมนู</button>
-</div>
+  <div id="sellerPanel" class="hidden">
+    <input id="shopName" placeholder="ชื่อร้านอาหาร">
+    <button onclick="createShop()">สร้างร้าน</button>
+  </div>
 
-<button onclick="show('home')">ออกจากระบบ</button>
+  <button onclick="showPage('home')">ออกจากระบบ</button>
 </div>
 
 <script>
-const GOOGLE_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbx8drLoAM_VWivCy6nQqW16S8j58io334UBFxqpgo_WHcq8tCz2FLzKhytooUhjFPAyOA/exec";
+let role = "";
 
-let role="";
-let orders=[];
-let orderCount=1;
-
-function show(id){
-  document.querySelectorAll('.container').forEach(c=>c.classList.add('hidden'));
+/* เปลี่ยนหน้า */
+function showPage(id){
+  document.querySelectorAll('.container')
+    .forEach(d => d.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
 
-function register(){
-  alert("สมัครสมาชิกสำเร็จ");
-  show("login");
-}
-
-function login(){
-  role=document.getElementById("loginRole").value;
-  show("shop");
-  if(role==="seller"){
-    document.getElementById("sellerPanel").classList.remove("hidden");
-    document.getElementById("studentMsg").style.display="none";
-  }
-}
-
-function createShop(){
-  if(!shopName.value)return alert("กรอกชื่อร้าน");
-  shopTitle.textContent=shopName.value;
-}
-
-function addMenu(){
-  if(!foodImg.files[0]||!foodName.value||!foodPrice.value)
-    return alert("กรอกข้อมูลให้ครบ");
-
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const div=document.createElement("div");
-    div.className="menu";
-    div.innerHTML=`
-      <img src="${e.target.result}">
-      <div>${foodName.value}</div>
-      <b>${foodPrice.value} บาท</b>
-    `;
-    const btn=document.createElement("button");
-    btn.textContent="สั่งอาหาร";
-    btn.onclick=()=>order(foodName.value,foodPrice.value);
-    div.appendChild(btn);
-    menuList.appendChild(div);
-    studentMsg.style.display="none";
-  };
-  reader.readAsDataURL(foodImg.files[0]);
-}
-
-function order(menu,price){
-  const data={
-    id:"ORD"+String(orderCount++).padStart(3,"0"),
-    menu:menu,
-    price:price,
-    time:new Date().toLocaleTimeString()
-  };
-  orders.push(data);
-  sendToDrive(shopTitle.textContent,menu,price);
-  alert("สั่งอาหารเรียบร้อย");
-}
-
-function sendToDrive(shop,menu,price){
-  fetch(GOOGLE_SCRIPT_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      shop:shop,
-      menu:menu,
-      price:price,
-      time:new Date().toLocaleTimeString("th-TH")
-    })
-  });
-}
-</script>
-
-</body>
-</html>
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f2f2f2;
-}
-<!-- LOGIN -->
-<input id="loginUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
-<input id="loginPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
-
-<!-- REGISTER -->
-<input id="regUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
-<input id="regPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
-<script>
-function validateInput(user, pass){
+/* ตรวจสอบความถูกต้อง */
+function validate(user, pass){
   if(!user || !pass){
-    alert("❌ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน");
+    alert("❌ ต้องกรอกชื่อผู้ใช้และรหัสผ่าน");
     return false;
   }
   if(user.length < 10){
@@ -225,28 +128,43 @@ function validateInput(user, pass){
   return true;
 }
 
+/* สมัครสมาชิก */
 function register(){
   const user = document.getElementById("regUser").value.trim();
   const pass = document.getElementById("regPass").value.trim();
 
-  if(!validateInput(user, pass)) return;
+  if(!validate(user, pass)) return;
 
   alert("✅ สมัครสมาชิกสำเร็จ");
-  show("login");
+  showPage("login");
 }
 
+/* เข้าสู่ระบบ */
 function login(){
   const user = document.getElementById("loginUser").value.trim();
   const pass = document.getElementById("loginPass").value.trim();
 
-  if(!validateInput(user, pass)) return;
+  if(!validate(user, pass)) return;
 
   role = document.getElementById("loginRole").value;
-  show("shop");
+  showPage("shop");
 
   if(role === "seller"){
     document.getElementById("sellerPanel").classList.remove("hidden");
     document.getElementById("studentMsg").style.display = "none";
   }
 }
+
+/* สร้างร้าน */
+function createShop(){
+  const name = document.getElementById("shopName").value.trim();
+  if(!name){
+    alert("กรุณากรอกชื่อร้าน");
+    return;
+  }
+  document.getElementById("shopTitle").textContent = name;
+}
 </script>
+
+</body>
+</html>
