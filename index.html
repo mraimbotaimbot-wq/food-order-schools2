@@ -201,3 +201,52 @@ body{
   font-family:Arial,sans-serif;
   background:#f2f2f2;
 }
+<!-- LOGIN -->
+<input id="loginUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
+<input id="loginPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
+
+<!-- REGISTER -->
+<input id="regUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
+<input id="regPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)" minlength="10" required>
+<script>
+function validateInput(user, pass){
+  if(!user || !pass){
+    alert("❌ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน");
+    return false;
+  }
+  if(user.length < 10){
+    alert("❌ ชื่อผู้ใช้ต้องมีอย่างน้อย 10 ตัวอักษร");
+    return false;
+  }
+  if(pass.length < 10){
+    alert("❌ รหัสผ่านต้องมีอย่างน้อย 10 ตัวอักษร");
+    return false;
+  }
+  return true;
+}
+
+function register(){
+  const user = document.getElementById("regUser").value.trim();
+  const pass = document.getElementById("regPass").value.trim();
+
+  if(!validateInput(user, pass)) return;
+
+  alert("✅ สมัครสมาชิกสำเร็จ");
+  show("login");
+}
+
+function login(){
+  const user = document.getElementById("loginUser").value.trim();
+  const pass = document.getElementById("loginPass").value.trim();
+
+  if(!validateInput(user, pass)) return;
+
+  role = document.getElementById("loginRole").value;
+  show("shop");
+
+  if(role === "seller"){
+    document.getElementById("sellerPanel").classList.remove("hidden");
+    document.getElementById("studentMsg").style.display = "none";
+  }
+}
+</script>
