@@ -1,135 +1,167 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ระบบสั่งอาหาร โรงเรียนตะพานหิน</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('taphanhin-school.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-    .container {
-      max-width: 420px;
-      width: 92%;
-      margin: 40px auto;
-      background: #ffffffee;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.15);
-    }
-    h1, h3, h4 { text-align: center; margin: 8px 0; }
-    button {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #2b7cff;
-      color: #fff;
-    }
-    button:active { transform: scale(0.98); }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0;
-      font-size: 15px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .hidden { display: none; }
-    #menuList {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
-    }
-    img { max
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบสั่งอาหาร โรงเรียนตะพานหิน</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:url('taphanhin-school.png') no-repeat center/cover fixed;
+}
+.container{
+  max-width:420px;
+  margin:40px auto;
+  background:#ffffffee;
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:none;
+  border-radius:8px;
+  background:#2b7cff;
+  color:#fff;
+  font-size:16px;
+}
+input,select{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+}
+.hidden{display:none}
+#menuList{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+img{
+  max-width:100%;
+  border-radius:8px;
+}
+</style>
+</head>
+
 <body>
 
 <div class="container" id="home">
-<h1>สั่งอาหารโรงเรียนตะพานหิน</h1>
+<h2>สั่งอาหารโรงเรียนตะพานหิน</h2>
 <button onclick="show('login')">เข้าสู่ระบบ</button>
 <button onclick="show('register')">สมัครสมาชิก</button>
 </div>
 
 <div class="container hidden" id="login">
-<h1>เข้าสู่ระบบ</h1>
-<select id="loginRole"><option value="student">นักเรียน</option><option value="seller">คนขาย</option></select>
-<input id="loginUser" placeholder="ชื่อผู้ใช้" maxlength="30">
-<input id="loginPass" type="password" placeholder="รหัสผ่าน 6 หลัก" maxlength="6">
+<h3>เข้าสู่ระบบ</h3>
+<select id="loginRole">
+<option value="student">นักเรียน</option>
+<option value="seller">คนขาย</option>
+</select>
+<input id="loginUser" placeholder="ชื่อผู้ใช้">
+<input id="loginPass" type="password" placeholder="รหัสผ่าน 6 หลัก">
 <button onclick="login()">เข้าสู่ระบบ</button>
 <button onclick="show('home')">กลับ</button>
 </div>
 
 <div class="container hidden" id="register">
-<h1>สมัครสมาชิก</h1>
-<select id="regRole"><option value="student">นักเรียน</option><option value="seller">คนขาย</option></select>
-<input id="regUser" placeholder="ชื่อผู้ใช้" maxlength="30">
-<input id="regPass" type="password" placeholder="รหัสผ่าน 6 หลัก" maxlength="6">
+<h3>สมัครสมาชิก</h3>
+<select id="regRole">
+<option value="student">นักเรียน</option>
+<option value="seller">คนขาย</option>
+</select>
+<input id="regUser" placeholder="ชื่อผู้ใช้">
+<input id="regPass" type="password" placeholder="รหัสผ่าน 6 หลัก">
 <button onclick="register()">สมัคร</button>
 <button onclick="show('home')">กลับ</button>
 </div>
 
 <div class="container hidden" id="shop">
-<h1 id="shopTitle">ร้านอาหาร</h1>
-<p id="studentMsg" style="text-align:center;color:#666">ยังไม่มีเมนูอาหาร</p>
-<div id="menuList" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div>
+<h3 id="shopTitle">ร้านอาหาร</h3>
+<p id="studentMsg">ยังไม่มีเมนู</p>
+<div id="menuList"></div>
 
 <div id="sellerPanel" class="hidden">
 <hr>
-<h3>สำหรับคนขาย</h3>
-<input id="shopName" placeholder="ชื่อร้านอาหาร" maxlength="30">
-<input type="time" id="openTime" value="11:35">
-<input type="time" id="closeTime" value="13:00">
+<input id="shopName" placeholder="ชื่อร้าน">
 <button onclick="createShop()">สร้างร้าน</button>
 <hr>
 <input type="file" id="foodImg" accept="image/*">
-<input id="foodName" placeholder="ชื่ออาหาร" maxlength="30">
+<input id="foodName" placeholder="ชื่ออาหาร">
 <input id="foodPrice" type="number" placeholder="ราคา">
 <button onclick="addMenu()">เพิ่มเมนู</button>
-<button onclick="exportExcel()">ส่งออก Excel</button>
 </div>
+
 <button onclick="show('home')">ออกจากระบบ</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <script>
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbx8drLoAM_VWivCy6nQqW16S8j58io334UBFxqpgo_WHcq8tCz2FLzKhytooUhjFPAyOA/exec";
+
 let role='';
 let orders=[];
 let orderCount=1;
-function show(id){document.querySelectorAll('.container').forEach(d=>d.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
 
-function register(){alert('สมัครสมาชิกสำเร็จ');show('login')}
+function show(id){
+  document.querySelectorAll('.container').forEach(d=>d.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
 
-function login(){role=document.getElementById('loginRole').value;show('shop');if(role==='seller'){sellerPanel.classList.remove('hidden');studentMsg.style.display='none'}}
+function register(){
+  alert('สมัครสำเร็จ');
+  show('login');
+}
 
-function createShop(){if(!shopName.value)return alert('กรอกชื่อร้าน');shopTitle.textContent=shopName.value}
+function login(){
+  role=loginRole.value;
+  show('shop');
+  if(role==='seller'){
+    sellerPanel.classList.remove('hidden');
+    studentMsg.style.display='none';
+  }
+}
 
-function addMenu(){if(!foodImg.files[0]||!foodName.value||!foodPrice.value)return alert('กรอกข้อมูลให้ครบ');
-const reader=new FileReader();
-reader.onload=e=>{
-const d=document.createElement('div');d.className='menu';
-d.innerHTML=`<img src="${e.target.result}"><div>${foodName.value}</div><b>${foodPrice.value} บาท</b>`;
-if(role==='student'){const b=document.createElement('button');b.textContent='สั่งอาหาร';b.onclick=()=>order(foodName.value,foodPrice.value);d.appendChild(b)}
-menuList.appendChild(d);studentMsg.style.display='none'};
-reader.readAsDataURL(foodImg.files[0])}
+function createShop(){
+  if(!shopName.value)return alert('กรอกชื่อร้าน');
+  shopTitle.textContent=shopName.value;
+}
 
-function order(name,price){
-  const orderData={
-    orderId:'ORD'+String(orderCount).padStart(3,'0'),
-    menu:name,
-    price:price,
+function addMenu(){
+  if(!foodImg.files[0]||!foodName.value||!foodPrice.value)return alert('กรอกข้อมูลให้ครบ');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const d=document.createElement('div');
+    d.innerHTML=`<img src="${e.target.result}">
+    <div>${foodName.value}</div>
+    <b>${foodPrice.value} บาท</b>`;
+    const b=document.createElement('button');
+    b.textContent='สั่งอาหาร';
+    b.onclick=()=>order(foodName.value,foodPrice.value);
+    d.appendChild(b);
+    menuList.appendChild(d);
+    studentMsg.style.display='none';
+  };
+  reader.readAsDataURL(foodImg.files[0]);
+}
+
+function order(menu,price){
+  const data={
+    orderId:'ORD'+String(orderCount++).padStart(3,'0'),
+    menu,price,
     time:new Date().toLocaleTimeString()
   };
-  orders.push(orderData);
-  orderCount++;
-  autoExportExcel();
-  alert('สั่งอาหารแล้ว และบันทึกลง Excel ทันที');
-});alert('สั่งอาหารแล้ว')}
+  orders.push(data);
+  sendToDrive(shopTitle.textContent,menu,price);
+  exportExcel();
+  alert('สั่งอาหารเรียบร้อย');
+}
 
 function exportExcel(){
   const wb=XLSX.utils.book_new();
@@ -138,29 +170,7 @@ function exportExcel(){
   XLSX.writeFile(wb,'orders.xlsx');
 }
 
-function autoExportExcel(){
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.json_to_sheet(orders);
-  XLSX.utils.book_append_sheet(wb,ws,'Orders');
-  XLSX.writeFile(wb,'orders_auto.xlsx');
-}
-</script>
-</body>
-</html>
-<script>
-const GOOGLE_SCRIPT_URL = https://script.google.com/macros/s/AKfycbwcNnw4sEQ6oXSIRg82iZ6mL1Fbl3daSH9uNbm4braiv_adQ7n02QuJCwQPHVkppxTIDg/exec
-"https://script.google.com/macros/s/AKfycbx8drLoAM_VWivCy6nQqW16S8j58io334UBFxqpgo_WHcq8tCz2FLzKhytooUhjFPAyOA/exec";
-
-function sendToDrive(shop, menu, price) {
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      shop: shop,
-      menu: menu,
-      price: price,
-      time: new Date().toLocaleTimeString("th-TH")
-    })
-  });
-}
-</script>
+function sendToDrive(shop,menu,price){
+  fetch(GOOGLE_SCRIPT_URL,{
+    method:'POST',
+    headers:
