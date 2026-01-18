@@ -41,13 +41,6 @@ input,select{
   border:1px solid #ccc;
 }
 .hidden{display:none}
-.menu{
-  border:1px solid #ddd;
-  border-radius:8px;
-  padding:6px;
-  margin-bottom:10px;
-  text-align:center;
-}
 </style>
 </head>
 
@@ -58,19 +51,6 @@ input,select{
   <h2>สั่งอาหารโรงเรียนตะพานหิน</h2>
   <button onclick="showPage('login')">เข้าสู่ระบบ</button>
   <button onclick="showPage('register')">สมัครสมาชิก</button>
-</div>
-
-<!-- เข้าสู่ระบบ -->
-<div class="container hidden" id="login">
-  <h3>เข้าสู่ระบบ</h3>
-  <select id="loginRole">
-    <option value="student">นักเรียน</option>
-    <option value="seller">คนขาย</option>
-  </select>
-  <input id="loginUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัวอักษร)">
-  <input id="loginPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัวอักษร)">
-  <button onclick="login()">เข้าสู่ระบบ</button>
-  <button onclick="showPage('home')">กลับ</button>
 </div>
 
 <!-- สมัครสมาชิก -->
@@ -86,23 +66,28 @@ input,select{
   <button onclick="showPage('home')">กลับ</button>
 </div>
 
-<!-- ร้านอาหาร -->
+<!-- เข้าสู่ระบบ -->
+<div class="container hidden" id="login">
+  <h3>เข้าสู่ระบบ</h3>
+  <select id="loginRole">
+    <option value="student">นักเรียน</option>
+    <option value="seller">คนขาย</option>
+  </select>
+  <input id="loginUser" placeholder="ชื่อผู้ใช้">
+  <input id="loginPass" type="password" placeholder="รหัสผ่าน">
+  <button onclick="login()">เข้าสู่ระบบ</button>
+  <button onclick="showPage('home')">กลับ</button>
+</div>
+
+<!-- หน้าร้าน -->
 <div class="container hidden" id="shop">
   <h3 id="shopTitle">ร้านอาหาร</h3>
-  <p id="studentMsg" style="text-align:center;color:#666">
-    ยังไม่มีเมนูอาหาร
-  </p>
-
-  <div id="sellerPanel" class="hidden">
-    <input id="shopName" placeholder="ชื่อร้านอาหาร">
-    <button onclick="createShop()">สร้างร้าน</button>
-  </div>
-
-  <button onclick="showPage('home')">ออกจากระบบ</button>
+  <p style="text-align:center;color:#666">เข้าสู่ระบบสำเร็จ</p>
+  <button onclick="logout()">ออกจากระบบ</button>
 </div>
 
 <script>
-let role = "";
+let currentRole = "";
 
 /* เปลี่ยนหน้า */
 function showPage(id){
@@ -111,7 +96,7 @@ function showPage(id){
   document.getElementById(id).classList.remove('hidden');
 }
 
-/* ตรวจสอบความถูกต้อง */
+/* ตรวจสอบข้อมูล */
 function validate(user, pass){
   if(!user || !pass){
     alert("❌ ต้องกรอกชื่อผู้ใช้และรหัสผ่าน");
@@ -130,10 +115,14 @@ function validate(user, pass){
 
 /* สมัครสมาชิก */
 function register(){
-  const user = document.getElementById("regUser").value.trim();
-  const pass = document.getElementById("regPass").value.trim();
+  const user = regUser.value.trim();
+  const pass = regPass.value.trim();
+  const role = regRole.value;
 
   if(!validate(user, pass)) return;
+
+  const account = { user, pass, role };
+  localStorage.setItem("schoolAccount", JSON.stringify(account));
 
   alert("✅ สมัครสมาชิกสำเร็จ");
   showPage("login");
@@ -141,28 +130,35 @@ function register(){
 
 /* เข้าสู่ระบบ */
 function login(){
-  const user = document.getElementById("loginUser").value.trim();
-  const pass = document.getElementById("loginPass").value.trim();
+  const user = loginUser.value.trim();
+  const pass = loginPass.value.trim();
+  const role = loginRole.value;
 
   if(!validate(user, pass)) return;
 
-  role = document.getElementById("loginRole").value;
-  showPage("shop");
+  const saved = JSON.parse(localStorage.getItem("schoolAccount"));
 
-  if(role === "seller"){
-    document.getElementById("sellerPanel").classList.remove("hidden");
-    document.getElementById("studentMsg").style.display = "none";
-  }
-}
-
-/* สร้างร้าน */
-function createShop(){
-  const name = document.getElementById("shopName").value.trim();
-  if(!name){
-    alert("กรุณากรอกชื่อร้าน");
+  if(!saved){
+    alert("❌ ยังไม่มีบัญชีผู้ใช้");
     return;
   }
-  document.getElementById("shopTitle").textContent = name;
+
+  if(user !== saved.user || pass !== saved.pass || role !== saved.role){
+    alert("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+    showPage("home");
+    return;
+  }
+
+  currentRole = role;
+  document.getElementById("shopTitle").textContent =
+    role === "seller" ? "หน้าคนขาย" : "หน้าร้านอาหาร";
+
+  showPage("shop");
+}
+
+/* ออกจากระบบ */
+function logout(){
+  showPage("home");
 }
 </script>
 
