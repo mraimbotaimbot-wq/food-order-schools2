@@ -147,3 +147,20 @@ function autoExportExcel(){
 </script>
 </body>
 </html>
+<script>
+const GOOGLE_SCRIPT_URL = https://script.google.com/macros/s/AKfycbwcNnw4sEQ6oXSIRg82iZ6mL1Fbl3daSH9uNbm4braiv_adQ7n02QuJCwQPHVkppxTIDg/exec
+"https://script.google.com/macros/s/AKfycbx8drLoAM_VWivCy6nQqW16S8j58io334UBFxqpgo_WHcq8tCz2FLzKhytooUhjFPAyOA/exec";
+
+function sendToDrive(shop, menu, price) {
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      shop: shop,
+      menu: menu,
+      price: price,
+      time: new Date().toLocaleTimeString("th-TH")
+    })
+  });
+}
+</script>
