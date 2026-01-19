@@ -2,198 +2,220 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>สั่งอาหาร</title>
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f2f2f2;
-}
+body{margin:0;font-family:sans-serif;background:#f2f4f8}
 .container{
-  max-width:420px;
-  margin:30px auto;
-  background:#fff;
-  padding:16px;
-  border-radius:12px;
-  box-shadow:0 4px 12px rgba(0,0,0,.2);
+  max-width:420px;margin:40px auto;background:#fff;
+  padding:16px;border-radius:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.15)
 }
-.hidden{display:none}
+h2,h3{text-align:center}
 button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border:none;
-  border-radius:8px;
-  background:#2b7cff;
-  color:#fff;
-  font-size:16px;
+  width:100%;padding:12px;margin:6px 0;
+  border:none;border-radius:8px;
+  background:#2b7cff;color:#fff;font-size:16px
 }
 input,select{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:6px;
-  border:1px solid #ccc;
+  width:100%;padding:10px;margin:6px 0;
+  border-radius:6px;border:1px solid #ccc
 }
+.hidden{display:none}
 .menu{
-  border:1px solid #ddd;
-  border-radius:8px;
-  padding:8px;
-  margin-top:10px;
-  text-align:center;
+  border:1px solid #ddd;border-radius:8px;
+  padding:6px;text-align:center
 }
 .menu img{
-  width:100%;
-  height:100px;
-  object-fit:cover;
-  border-radius:6px;
+  width:100%;height:90px;object-fit:cover;border-radius:6px
 }
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.badge{background:#eee;padding:6px;border-radius:6px;margin:4px 0}
 </style>
 </head>
 
 <body>
 
-<!-- หน้าแรก -->
 <div class="container" id="home">
-<h2>🍽️ สั่งอาหาร</h2>
-<button onclick="show('login')">เข้าสู่ระบบ</button>
-<button onclick="show('register')">สมัครสมาชิก</button>
+  <h2>🍽️ สั่งอาหาร</h2>
+  <button onclick="show('login')">เข้าสู่ระบบ</button>
+  <button onclick="show('register')">สมัครสมาชิก</button>
 </div>
 
-<!-- สมัคร -->
 <div class="container hidden" id="register">
-<h3>สมัครสมาชิก</h3>
-<select id="regRole">
-<option value="student">นักเรียน</option>
-<option value="seller">คนขาย</option>
-</select>
-<input id="regUser" placeholder="ชื่อผู้ใช้ (อย่างน้อย 10 ตัว)">
-<input id="regPass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 10 ตัว)">
-<button onclick="register()">สมัคร</button>
-<button onclick="show('home')">กลับ</button>
+  <h3>สมัครสมาชิก</h3>
+  <select id="rRole">
+    <option value="student">นักเรียน</option>
+    <option value="seller">คนขาย</option>
+  </select>
+  <input id="rUser" placeholder="ชื่อผู้ใช้ ≥ 10 ตัว">
+  <input id="rPass" type="password" placeholder="รหัสผ่าน ≥ 10 ตัว">
+  <button onclick="register()">สมัคร</button>
+  <button onclick="show('home')">กลับ</button>
 </div>
 
-<!-- เข้าสู่ระบบ -->
 <div class="container hidden" id="login">
-<h3>เข้าสู่ระบบ</h3>
-<input id="loginUser" placeholder="ชื่อผู้ใช้">
-<input id="loginPass" type="password" placeholder="รหัสผ่าน">
-<button onclick="login()">เข้าสู่ระบบ</button>
-<button onclick="show('home')">กลับ</button>
+  <h3>เข้าสู่ระบบ</h3>
+  <select id="lRole">
+    <option value="student">นักเรียน</option>
+    <option value="seller">คนขาย</option>
+  </select>
+  <input id="lUser" placeholder="ชื่อผู้ใช้">
+  <input id="lPass" type="password" placeholder="รหัสผ่าน">
+  <button onclick="login()">เข้าใช้งาน</button>
+  <button onclick="show('home')">กลับ</button>
 </div>
 
-<!-- หน้าร้าน -->
 <div class="container hidden" id="shop">
-<h3 id="roleTitle"></h3>
+  <h3 id="shopTitle">ร้านอาหาร</h3>
+  <div id="timeInfo"></div>
 
-<p id="noMenuMsg" style="text-align:center;color:#888"></p>
-<div id="menuList"></div>
+  <div id="noMenu" style="text-align:center;color:#777">
+    ยังไม่มีเมนูอาหาร
+  </div>
 
-<!-- คนขาย -->
-<div id="sellerPanel" class="hidden">
-<hr>
-<h4>เพิ่มเมนูอาหาร</h4>
-<input type="file" id="foodImg">
-<input id="foodName" placeholder="ชื่ออาหาร">
-<input id="foodPrice" type="number" placeholder="ราคา">
-<button onclick="addMenu()">เพิ่มเมนู</button>
-</div>
+  <div id="menuList" class="grid"></div>
 
-<button onclick="logout()">ออกจากระบบ</button>
+  <!-- คนขาย -->
+  <div id="sellerPanel" class="hidden">
+    <hr>
+    <h3>Dashboard คนขาย</h3>
+    <div class="badge" id="dashMenu"></div>
+    <div class="badge" id="dashOrder"></div>
+    <div class="badge" id="dashTotal"></div>
+
+    <input id="shopName" placeholder="ชื่อร้าน">
+    <label>เปิดร้าน</label>
+    <input type="time" id="openTime" value="11:30">
+    <label>ปิดร้าน</label>
+    <input type="time" id="closeTime" value="13:00">
+
+    <hr>
+    <input type="file" id="foodImg" accept="image/*">
+    <input id="foodName" placeholder="ชื่ออาหาร">
+    <input id="foodPrice" type="number" placeholder="ราคา">
+    <button onclick="addMenu()">เพิ่มเมนู</button>
+  </div>
+
+  <button onclick="logout()">ออกจากระบบ</button>
 </div>
 
 <script>
-let currentRole = "";
-let menus = JSON.parse(localStorage.getItem("menus") || "[]");
+/* ================== CONFIG ================== */
+// 👉 ใส่ URL Google Apps Script ของคุณ
+const SHEET_API = "https://script.google.com/macros/s/XXXXXXXX/exec";
 
+/* ================== DATA ================== */
+let users=[], current=null;
+let menus=[], orders=[];
+let shop={name:"",open:"11:30",close:"13:00"};
+
+/* ================== UI ================== */
 function show(id){
-  document.querySelectorAll(".container").forEach(d=>d.classList.add("hidden"));
+  document.querySelectorAll(".container").forEach(c=>c.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* สมัคร */
+/* ================== AUTH ================== */
 function register(){
-  const user = regUser.value.trim();
-  const pass = regPass.value.trim();
-  const role = regRole.value;
-
-  if(user.length < 10 || pass.length < 10){
-    alert("ชื่อผู้ใช้และรหัสผ่านต้องอย่างน้อย 10 ตัวอักษร");
-    return;
-  }
-
-  localStorage.setItem("account", JSON.stringify({user,pass,role}));
-  alert("สมัครสำเร็จ");
-  show("login");
+  if(rUser.value.length<10||rPass.value.length<10)
+    return alert("ต้องอย่างน้อย 10 ตัวอักษร");
+  users.push({u:rUser.value,p:rPass.value,r:rRole.value});
+  alert("สมัครสำเร็จ"); show("login");
 }
 
-/* เข้าสู่ระบบ */
 function login(){
-  const acc = JSON.parse(localStorage.getItem("account") || "{}");
-  if(loginUser.value !== acc.user || loginPass.value !== acc.pass){
-    alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
-    show("home");
-    return;
-  }
-
-  currentRole = acc.role;
-  roleTitle.textContent = currentRole === "seller" ? "🧑‍🍳 คนขาย" : "🎓 นักเรียน";
-  show("shop");
-  renderMenus();
-
-  if(currentRole === "seller"){
-    sellerPanel.classList.remove("hidden");
-  }
+  const f=users.find(x=>x.u===lUser.value&&x.p===lPass.value&&x.r===lRole.value);
+  if(!f){alert("ข้อมูลไม่ถูกต้อง");show("home");return}
+  current=f; show("shop");
+  sellerPanel.classList.toggle("hidden",current.r!=="seller");
+  render();
 }
 
-/* เพิ่มเมนู (คนขาย) */
+function logout(){current=null;show("home")}
+
+/* ================== MENU ================== */
 function addMenu(){
-  if(!foodImg.files[0] || !foodName.value || !foodPrice.value){
-    alert("กรอกข้อมูลให้ครบ");
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = e=>{
-    menus.push({
-      name: foodName.value,
-      price: foodPrice.value,
-      img: e.target.result
-    });
-    localStorage.setItem("menus", JSON.stringify(menus));
-    renderMenus();
-    foodName.value="";
-    foodPrice.value="";
+  if(!foodImg.files[0]||!foodName.value||!foodPrice.value)
+    return alert("กรอกข้อมูลให้ครบ");
+  const r=new FileReader();
+  r.onload=e=>{
+    menus.push({img:e.target.result,name:foodName.value,price:+foodPrice.value});
+    render();
   };
-  reader.readAsDataURL(foodImg.files[0]);
+  r.readAsDataURL(foodImg.files[0]);
 }
 
-/* แสดงเมนู */
-function renderMenus(){
-  menuList.innerHTML="";
-  if(menus.length === 0){
-    noMenuMsg.textContent="ยังไม่มีเมนูอาหารจากร้านค้า";
-    return;
-  }
+/* ================== ORDER ================== */
+function order(m){
+  if(!isOpen()) return alert("ร้านปิด");
+  orders.push(m);
+  sendSheet(m);
+  alert("สั่งอาหารสำเร็จ");
+  render();
+}
 
-  noMenuMsg.textContent="";
+/* ================== TIME ================== */
+function isOpen(){
+  const now=new Date().toTimeString().slice(0,5);
+  return now>=shop.open && now<=shop.close;
+}
+
+/* ================== RENDER ================== */
+function render(){
+  shop.name=shopName.value||shop.name;
+  shop.open=openTime.value; shop.close=closeTime.value;
+  shopTitle.textContent=shop.name||"ร้านอาหาร";
+
+  timeInfo.textContent=`🕒 ${shop.open} - ${shop.close}`;
+
+  menuList.innerHTML="";
+  noMenu.style.display=menus.length?"none":"block";
+
   menus.forEach(m=>{
-    const div=document.createElement("div");
-    div.className="menu";
-    div.innerHTML=`
-      <img src="${m.img}">
-      <h4>${m.name}</h4>
-      <b>${m.price} บาท</b>
-    `;
-    menuList.appendChild(div);
+    const d=document.createElement("div");
+    d.className="menu";
+    d.innerHTML=`<img src="${m.img}">
+      <div>${m.name}</div><b>${m.price} บาท</b>`;
+    if(current.r==="student"){
+      const b=document.createElement("button");
+      b.textContent="สั่งอาหาร";
+      b.onclick=()=>order(m);
+      d.appendChild(b);
+    }
+    menuList.appendChild(d);
+  });
+
+  if(current.r==="seller"){
+    dashMenu.textContent="เมนูทั้งหมด: "+menus.length;
+    dashOrder.textContent="ออเดอร์: "+orders.length;
+    dashTotal.textContent="ยอดขาย: "+
+      orders.reduce((s,o)=>s+o.price,0)+" บาท";
+  }
+}
+
+/* ================== SHEETS ================== */
+function sendSheet(m){
+  fetch(SHEET_API,{
+    method:"POST",
+    body:JSON.stringify({
+      shop:shop.name,menu:m.name,price:m.price,
+      time:new Date().toLocaleString("th-TH")
+    })
   });
 }
 
-function logout(){
-  show("home");
+/* ================== PWA ================== */
+if("serviceWorker"in navigator){
+  const sw=`
+    self.addEventListener("fetch",e=>{
+      e.respondWith(fetch(e.request).catch(()=>new Response("offline")));
+    });
+  `;
+  const blob=new Blob([sw],{type:"text/javascript"});
+  navigator.serviceWorker.register(URL.createObjectURL(blob));
 }
 </script>
 
